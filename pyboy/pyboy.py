@@ -464,4 +464,4 @@ class PyBoy:
         """
         Disable or enable rendering
         """
-        self.mb.disable_renderer = not value
+        self.mb.renderer.disable_renderer = not value
