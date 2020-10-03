@@ -4,7 +4,6 @@
 #
 
 import ctypes
-import logging
 from array import array
 
 import sdl2
@@ -14,8 +13,8 @@ from pyboy.core.opcodes import CPU_COMMANDS
 from pyboy.plugins.base_plugin import PyBoyWindowPlugin
 from pyboy.plugins.window_sdl2 import sdl2_event_pump
 from pyboy.utils import WindowEvent
+from pyboy.logger import logger
 
-logger = logging.getLogger(__name__)
 
 try:
     from cython import compiled
