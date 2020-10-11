@@ -4,6 +4,7 @@
 #
 
 import ctypes
+import gzip
 from array import array
 
 import sdl2
@@ -34,6 +35,9 @@ marked_tiles = set([])
 MARK = array("I", [0xFF000000, 0xFFC00000, 0xFFFC0000, 0x00FFFF00, 0xFF00FF00])
 
 SPRITE_BACKGROUND = COLOR_BACKGROUND
+
+with gzip.open("font/ter-16b-ibm437.txt.gz") as g:
+    FONTDATA = [bytes.fromhex(x.strip().decode()) for x in g.readlines()]
 
 
 class MarkedTile:
@@ -258,6 +262,15 @@ class BaseDebugWindow(PyBoyWindowPlugin):
         for i in range(th):
             if 0 <= (yy + i) < self.height and 0 <= xx + tw - 1 < self.width:
                 self.buf0[yy + i][xx + tw - 1] = color
+
+    def draw_text(self, x, y, text, color=0x00000000):
+        for i, b in enumerate(text.encode("cp437")):
+            chardata = FONTDATA[b]
+            for dy in range(16):
+                linedata = [bool((0x80 >> r) & chardata[dy]) for r in range(8)]
+                for dx in range(8):
+                    if linedata[dx]:
+                        self.buf0[y + dy][x + 8*i + dx] = color
 
 
 class TileViewWindow(BaseDebugWindow):
